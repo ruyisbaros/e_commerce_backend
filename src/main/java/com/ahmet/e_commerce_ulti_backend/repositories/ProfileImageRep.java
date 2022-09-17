@@ -13,4 +13,7 @@ public interface ProfileImageRep extends JpaRepository<ProfileImage,Long > {
 
     @Query("select p from ProfileImage p where p.imageId = ?1")
     Optional<ProfileImage> findByImageId(String imageId);
+
+    //@Query("delete from images where image_id = ?1 ")
+    void deleteByImageId(String imageId);
 }

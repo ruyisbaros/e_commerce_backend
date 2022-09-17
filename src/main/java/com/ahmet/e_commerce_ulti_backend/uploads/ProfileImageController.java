@@ -2,6 +2,7 @@ package com.ahmet.e_commerce_ulti_backend.uploads;
 
 import com.ahmet.e_commerce_ulti_backend.entities.ProfileImage;
 import com.ahmet.e_commerce_ulti_backend.messages.Message;
+import com.ahmet.e_commerce_ulti_backend.repositories.ProfileImageRep;
 import com.ahmet.e_commerce_ulti_backend.services.CloudinaryService;
 import com.ahmet.e_commerce_ulti_backend.services.ProfileImageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class ProfileImageController {
     @Autowired
     private ProfileImageService profileImageService;
 
+    @Autowired
+    private ProfileImageRep profileImageRep;
+
     @GetMapping("/list_all")
     public ResponseEntity<List<ProfileImage>> listImages() {
         List<ProfileImage> list = profileImageService.listImages();
@@ -44,9 +48,9 @@ public class ProfileImageController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteImage(@PathVariable Long id) throws IOException {
+    public ResponseEntity<?> deleteImage(@PathVariable String id) throws IOException {
         if (profileImageService.isImageExist(id)) {
-            ProfileImage image = profileImageService.getOne(id).get();
+            ProfileImage image = profileImageRep.findByImageId(id).get();
             Map result = cloudinaryService.deleteImage(image.getImageId());
             profileImageService.deleteImage(id);
             return new ResponseEntity(new Message("Image has been deleted successfully"), HttpStatus.OK);

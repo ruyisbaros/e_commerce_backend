@@ -42,15 +42,16 @@ public class WebSecurityConfig {
                 .csrf().disable()
 
                 .authorizeRequests()
-                .antMatchers("/", "index","/image/png/**", "/css/**", "/js/**").permitAll()
+                .antMatchers("/", "index", "/image/png/**", "/image/jpeg/**", "/css/**", "/js/**").permitAll()
                 .antMatchers("/api/v1/auth/**").permitAll()
                 .antMatchers("/api/v1/admin/users/**").permitAll()
+                .antMatchers("/api/v1/admin/images/**").permitAll()
                 .antMatchers("/api/v1/products/all").permitAll()
                 .antMatchers("/api/v1/products/create").hasRole("ADMIN")
                 .antMatchers("/api/v1/roles/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
-                //.and()
-                //.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        //.and()
+        //.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

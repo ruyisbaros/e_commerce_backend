@@ -1,5 +1,6 @@
 package com.ahmet.e_commerce_ulti_backend.appUser;
 
+import com.ahmet.e_commerce_ulti_backend.entities.ProfileImage;
 import com.ahmet.e_commerce_ulti_backend.entities.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -30,7 +31,6 @@ public class AppUser implements UserDetails {
     @Column(nullable = false)
     @JsonIgnore
     private String password;
-    private String image;
     private boolean isEnabled;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -40,11 +40,15 @@ public class AppUser implements UserDetails {
     )
     private List<Role> roles = new ArrayList<>();
 
+    @OneToOne(fetch = FetchType.EAGER)
+    private ProfileImage profileImage;
+
     public AppUser(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+
     }
 
     public void addRole(Role role) {

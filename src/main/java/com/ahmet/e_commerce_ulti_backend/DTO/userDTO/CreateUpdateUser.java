@@ -13,7 +13,7 @@ public class CreateUpdateUser {
     private String lastName;
     private String roleName;
     private String password;
-    private String image;
+    private String imageId;
     private boolean isEnabled;
     private List<Role> roles;
 

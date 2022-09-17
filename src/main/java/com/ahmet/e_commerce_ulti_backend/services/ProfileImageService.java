@@ -28,11 +28,11 @@ public class ProfileImageService {
         profileImageRep.save(profileImage);
     }
 
-    public void deleteImage(Long id){
-        profileImageRep.deleteById(id);
+    public void deleteImage(String id){
+        profileImageRep.deleteByImageId(id);
     }
 
-    public boolean isImageExist(Long id){
-        return profileImageRep.existsById(id);
+    public boolean isImageExist(String id){
+        return profileImageRep.findByImageId(id).isPresent();
     }
 }

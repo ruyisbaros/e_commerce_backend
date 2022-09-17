@@ -2,8 +2,10 @@ package com.ahmet.e_commerce_ulti_backend.services;
 
 import com.ahmet.e_commerce_ulti_backend.DTO.userDTO.CreateUpdateUser;
 import com.ahmet.e_commerce_ulti_backend.appUser.AppUser;
+import com.ahmet.e_commerce_ulti_backend.entities.ProfileImage;
 import com.ahmet.e_commerce_ulti_backend.entities.Role;
 import com.ahmet.e_commerce_ulti_backend.repositories.AppUserRep;
+import com.ahmet.e_commerce_ulti_backend.repositories.ProfileImageRep;
 import com.ahmet.e_commerce_ulti_backend.repositories.RoleRep;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -25,12 +28,20 @@ public class UserService {
 
     private PasswordEncoder passwordEncoder;
 
+    private ProfileImageService profileImageService;
+
+    private ProfileImageRep profileImageRep;
+
     public List<AppUser> getAllUsers() {
         return appUserRep.findAll();
     }
 
     public AppUser createNewUser(CreateUpdateUser request) {
+
         boolean isExist = appUserRep.findByEmail(request.getEmail()).isPresent();
+
+        Optional<ProfileImage> profileImage = profileImageRep.findByImageId(request.getImageId());
+
         if (!isExist) {
             AppUser appUser = new AppUser();
             List<Role> roles = request.getRoles();
@@ -41,7 +52,7 @@ public class UserService {
             appUser.setLastName(request.getLastName());
             appUser.setEmail(request.getEmail());
             appUser.setPassword(passwordEncoder.encode(request.getPassword()));
-            appUser.setImage(request.getImage());
+            appUser.setProfileImage(profileImage.get());
             appUser.setEnabled(true);
             //System.out.println(request);
             return appUserRep.save(appUser);
@@ -56,6 +67,7 @@ public class UserService {
     }
 
     public AppUser updateUser(Long userId, CreateUpdateUser request) {
+        Optional<ProfileImage> profileImage = profileImageRep.findByImageId(request.getImageId());
         AppUser appUser = appUserRep.findById(userId).get();
         List<Role> roles = new ArrayList<>();
         for (Role r : request.getRoles()) {
@@ -64,8 +76,8 @@ public class UserService {
         appUser.setFirstName(request.getFirstName());
         appUser.setLastName(request.getLastName());
         appUser.setEmail(request.getEmail());
-        appUser.setPassword(request.getPassword());
-        appUser.setImage(request.getImage());
+        appUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        appUser.setProfileImage(profileImage.get());
         appUser.setEnabled(request.isEnabled());
         appUser.setRoles((roles));
         return appUserRep.save(appUser);
