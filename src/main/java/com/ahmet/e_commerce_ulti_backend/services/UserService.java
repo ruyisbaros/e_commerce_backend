@@ -8,6 +8,9 @@ import com.ahmet.e_commerce_ulti_backend.repositories.AppUserRep;
 import com.ahmet.e_commerce_ulti_backend.repositories.ProfileImageRep;
 import com.ahmet.e_commerce_ulti_backend.repositories.RoleRep;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,8 +35,13 @@ public class UserService {
 
     private ProfileImageRep profileImageRep;
 
-    public List<AppUser> getAllUsers() {
-        return appUserRep.findAll();
+    public Page<AppUser> getAllUsers(int pageSize, int pageNo, String sorting) {
+
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+
+        //Sort sort=
+
+        return appUserRep.findAll(pageable);
     }
 
     public AppUser createNewUser(CreateUpdateUser request) {
@@ -109,4 +117,5 @@ public class UserService {
             appUserRep.save(targetUser);
         }
     }
+
 }

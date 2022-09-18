@@ -6,6 +6,7 @@ import com.ahmet.e_commerce_ulti_backend.entities.Role;
 import com.ahmet.e_commerce_ulti_backend.repositories.AppUserRep;
 import com.ahmet.e_commerce_ulti_backend.services.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +20,12 @@ public class AdminUserCrud {
     private AppUserRep appUserRep;
 
     @GetMapping("/all")
-    public List<AppUser> getUsers() {
-        return userService.getAllUsers();
+    public Page<AppUser> getUsers(
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize,
+            @RequestParam(value = "pageNo", defaultValue = "1", required = false) int pageNo,
+            @RequestParam(value = "sorting", defaultValue = "asc", required = false) String sorting
+    ) {
+        return userService.getAllUsers(pageSize, pageNo, sorting);
     }
 
     @GetMapping("/is_email_unique/{email}")
@@ -40,9 +45,10 @@ public class AdminUserCrud {
     }
 
     @DeleteMapping("/delete_user/{userId}")
-    public void deleteUser(@PathVariable long userId){
+    public void deleteUser(@PathVariable long userId) {
         userService.deleteUser(userId);
     }
+
     //update general
     @PutMapping("/update_user/{userId}")
     public AppUser updateUser(@RequestBody CreateUpdateUser request, @PathVariable Long userId) {
@@ -51,7 +57,7 @@ public class AdminUserCrud {
 
     //Update Enabled-disabled
     @PutMapping("/user_enabled_disabled/{userId}")
-    public void updateEnableSt(@PathVariable long userId){
+    public void updateEnableSt(@PathVariable long userId) {
         userService.updateEnableStatus(userId);
     }
 
