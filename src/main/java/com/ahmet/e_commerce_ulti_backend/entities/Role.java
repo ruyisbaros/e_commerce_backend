@@ -29,4 +29,9 @@ public class Role {
         this.roleName = roleName;
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return this.roleName;
+    }
 }
