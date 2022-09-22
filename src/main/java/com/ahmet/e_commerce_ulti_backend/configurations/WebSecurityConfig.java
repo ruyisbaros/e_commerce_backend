@@ -2,9 +2,11 @@ package com.ahmet.e_commerce_ulti_backend.configurations;
 
 
 import com.ahmet.e_commerce_ulti_backend.appUser.AppUserService;
+import com.ahmet.e_commerce_ulti_backend.jwt.FilterJwt;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -16,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Method;
 
 
 @Configuration
@@ -26,7 +29,7 @@ public class WebSecurityConfig {
     private final PasswordEncoder passwordEncoder;
     private final AppUserService appUserService;
 
-    //private final JwtTokenFilter jwtTokenFilter;
+    private FilterJwt filterJwt;
 
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -42,16 +45,14 @@ public class WebSecurityConfig {
                 .csrf().disable()
 
                 .authorizeRequests()
-                .antMatchers("/", "index", "/image/png/**", "/image/jpeg/**", "/css/**", "/js/**").permitAll()
+                //.antMatchers("/", "index", "/image/png/**", "/image/jpeg/**", "/css/**", "/js/**").permitAll()
                 .antMatchers("/api/v1/auth/**").permitAll()
-                .antMatchers("/api/v1/admin/users/**").permitAll()
-                .antMatchers("/api/v1/admin/images/**").permitAll()
-                .antMatchers("/api/v1/products/all").permitAll()
-                .antMatchers("/api/v1/products/create").hasRole("ADMIN")
-                .antMatchers("/api/v1/roles/**").hasRole("ADMIN")
-                .anyRequest().authenticated();
-        //.and()
-        //.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+                .antMatchers( "/api/v1/users/images/**").permitAll()
+                .antMatchers("/api/v1/admin/users/**").hasAuthority("Admin")
+                .antMatchers("/api/v1/roles/**").hasAuthority("Admin")
+                .anyRequest().authenticated()
+                .and()
+                .addFilterBefore(filterJwt, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

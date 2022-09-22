@@ -50,19 +50,21 @@ public class UserService {
 
         boolean isExist = appUserRep.findByEmail(request.getEmail()).isPresent();
 
-        Optional<ProfileImage> profileImage = profileImageRep.findByImageId(request.getImageId());
-
         if (!isExist) {
             AppUser appUser = new AppUser();
             List<Role> roles = request.getRoles();
             for (Role r : roles) {
                 appUser.addRole(r);
             }
+            if (!request.getImageId().isEmpty()) {
+                Optional<ProfileImage> profileImage = profileImageRep.findByImageId(request.getImageId());
+                appUser.setProfileImage(profileImage.get());
+            }
             appUser.setFirstName(request.getFirstName());
             appUser.setLastName(request.getLastName());
             appUser.setEmail(request.getEmail());
             appUser.setPassword(passwordEncoder.encode(request.getPassword()));
-            appUser.setProfileImage(profileImage.get());
+
             appUser.setEnabled(true);
             //System.out.println(request);
             return appUserRep.save(appUser);
@@ -77,17 +79,20 @@ public class UserService {
     }
 
     public AppUser updateUser(Long userId, CreateUpdateUser request) {
-        Optional<ProfileImage> profileImage = profileImageRep.findByImageId(request.getImageId());
+
         AppUser appUser = appUserRep.findById(userId).get();
         List<Role> roles = new ArrayList<>();
         for (Role r : request.getRoles()) {
             roles.add(new Role(r.getRoleName()));
         }
+        if (!request.getImageId().isEmpty()) {
+            Optional<ProfileImage> profileImage = profileImageRep.findByImageId(request.getImageId());
+            appUser.setProfileImage(profileImage.get());
+        }
         appUser.setFirstName(request.getFirstName());
         appUser.setLastName(request.getLastName());
         appUser.setEmail(request.getEmail());
         appUser.setPassword(passwordEncoder.encode(request.getPassword()));
-        appUser.setProfileImage(profileImage.get());
         appUser.setEnabled(request.isEnabled());
         appUser.setRoles((roles));
         return appUserRep.save(appUser);

@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController()
-@RequestMapping("/api/v1/admin/images/")
+@RequestMapping("/api/v1/users/images/")
 @CrossOrigin
 public class ProfileImageController {
 
