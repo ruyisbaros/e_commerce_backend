@@ -1,5 +1,6 @@
 package com.ahmet.e_commerce_ulti_backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,11 +29,23 @@ public class Category {
     @JoinColumn(name = "parent_id")
     private Category parent;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<Category> children = new ArrayList<>();
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "parent",fetch = FetchType.EAGER)
+//    private List<Category> children = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER)
     private List<CategoryImage> images;
+
+    public static Category copyFull(Category category){
+        Category copyCategory=new Category();
+        copyCategory.setId(category.getId());
+        copyCategory.setName(copyCategory.getName());
+        copyCategory.setEnabled(category.isEnabled());
+        copyCategory.setAlias(category.getAlias());
+        copyCategory.setImages(category.getImages());
+
+        return copyCategory;
+    }
 
     public Category(Long id) {
         this.id = id;

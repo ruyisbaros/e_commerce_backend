@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 public class CreateUpdateCategory {
 
+
     private String name;
     private String alias;
     private String parentName;

@@ -75,6 +75,12 @@ public class CategoryRepTest {
     }
 
     @Test
+    public void testListRootCategories(){
+    List<Category> rootCategories=categoryRep.findRootCategories();
+    rootCategories.forEach(category -> System.out.println(category.getName()));
+    }
+
+    @Test
     public void testHierarchicalCategories() {
         List<Category> categoryList = categoryRep.findAll();
 

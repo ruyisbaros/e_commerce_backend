@@ -34,6 +34,18 @@ public class CategoryCrud {
         categoryService.createNew(request);
     }
 
+    //update General
+    @PutMapping("/update/{id}")
+    public String updateCategory(@PathVariable Long id,@RequestBody CreateUpdateCategory request){
+       return categoryService.updateCatg(id,request);
+    }
+
+    //Update Enabled-disabled
+    @PutMapping("/category_enabled_disabled/{id}")
+    public void updateEnableSt(@PathVariable long id) {
+        categoryService.updateEnableStatus(id);
+    }
+
     //For create form select options
     @GetMapping("/all_categories")
     public List<Category> categoriesInForm(){
