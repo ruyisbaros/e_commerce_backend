@@ -6,7 +6,7 @@ import com.ahmet.e_commerce_ulti_backend.appUser.UserCsvExporter;
 import com.ahmet.e_commerce_ulti_backend.appUser.UserExcelExporter;
 import com.ahmet.e_commerce_ulti_backend.appUser.UserPdfExporter;
 import com.ahmet.e_commerce_ulti_backend.entities.Role;
-import com.ahmet.e_commerce_ulti_backend.exception.ApiRequestException;
+//import com.ahmet.e_commerce_ulti_backend.exception.ApiRequestException;
 import com.ahmet.e_commerce_ulti_backend.repositories.AppUserRep;
 import com.ahmet.e_commerce_ulti_backend.services.UserService;
 import lombok.AllArgsConstructor;
@@ -38,11 +38,7 @@ public class AdminUserCrud {
             @RequestParam(value = "sortField", required = false) String sortField,
             @RequestParam(value = "keyword", defaultValue = "", required = false) String keyword
     ) {
-        try {
-            return userService.getAllUsers(pageSize, pageNo, sortDir, sortField, keyword);
-        } catch (ApiRequestException e) {
-            return (Page<AppUser>) new ApiRequestException("You are not authorized");
-        }
+        return userService.getAllUsers(pageSize, pageNo, sortDir, sortField, keyword);
     }
 
     @GetMapping("/is_email_unique/{email}")

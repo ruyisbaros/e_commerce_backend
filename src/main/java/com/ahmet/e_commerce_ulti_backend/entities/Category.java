@@ -24,15 +24,15 @@ public class Category {
     private String alias;
     private boolean enabled;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne()
     @JoinColumn(name = "parent_id")
     private Category parent;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parent")
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Category> children = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.EAGER)
-    private CategoryImage categoryImage;
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<CategoryImage> images;
 
     public Category(Long id) {
         this.id = id;

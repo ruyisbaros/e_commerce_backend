@@ -23,4 +23,8 @@ public class CategoryImage {
         this.imageId = imageId;
         this.imageUrl = imageUrl;
     }
+
+    public CategoryImage(String imageId) {
+        this.imageId = imageId;
+    }
 }
