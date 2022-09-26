@@ -16,6 +16,9 @@ public interface CategoryRep extends JpaRepository<Category, Long> {
     @Query("select c from Category c where c.name = ?1")
     Category findByName(String parentName);
 
+    @Query("select c from Category c where c.alias = ?1")
+    Category findByAlias(String alias);
+
     @Query("select c from Category c where c.parent.id = null")
     public List<Category> findRootCategories();
 }

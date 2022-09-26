@@ -45,11 +45,12 @@ public class WebSecurityConfig {
                 .csrf().disable()
 
                 .authorizeRequests()
-                //.antMatchers("/", "index", "/image/png/**", "/image/jpeg/**", "/css/**", "/js/**").permitAll()
+                .antMatchers("/", "index", "/image/png/**", "/image/jpeg/**", "/css/**", "/js/**").permitAll()
                 .antMatchers("/api/v1/auth/**").permitAll()
-                .antMatchers( "/api/v1/users/images/**").permitAll()
+                .antMatchers("/api/v1/users/images/**").permitAll()
                 .antMatchers("/api/v1/admin/users/**").hasAuthority("Admin")
-                .antMatchers("/api/v1/roles/**").hasAuthority("Admin")
+                .antMatchers("/api/v1/company/categories/**").hasAnyAuthority("Admin", "Editor")
+                .antMatchers("/api/v1/admin/roles/**").hasAuthority("Admin")
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(filterJwt, UsernamePasswordAuthenticationFilter.class);

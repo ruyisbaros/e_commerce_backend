@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/categories/images")
+@RequestMapping("/api/v1/company/categories/images")
 @AllArgsConstructor
 @CrossOrigin
 public class CategoryImageController {

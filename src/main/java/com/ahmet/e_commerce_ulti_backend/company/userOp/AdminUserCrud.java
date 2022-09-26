@@ -1,4 +1,4 @@
-package com.ahmet.e_commerce_ulti_backend.admin.userOp;
+package com.ahmet.e_commerce_ulti_backend.company.userOp;
 
 import com.ahmet.e_commerce_ulti_backend.DTO.userDTO.CreateUpdateUser;
 import com.ahmet.e_commerce_ulti_backend.appUser.AppUser;
@@ -58,7 +58,7 @@ public class AdminUserCrud {
     }
 
     @DeleteMapping("/delete_user/{userId}")
-    public void deleteUser(@PathVariable long userId) {
+    public void deleteUser(@PathVariable long userId) throws IOException {
         userService.deleteUser(userId);
     }
 

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +36,8 @@ public class UserService {
     private ProfileImageService profileImageService;
 
     private ProfileImageRep profileImageRep;
+
+    private CloudinaryService cloudinaryService;
 
     public Page<AppUser> getAllUsers(int pageSize, int pageNo, String sortDir, String sortField, String keyword) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
@@ -105,9 +108,11 @@ public class UserService {
 
     }
 
-    public void deleteUser(long userId) {
-        boolean isExist = appUserRep.findById(userId).isPresent();
-        if (isExist) {
+    public void deleteUser(long userId) throws IOException {
+        Optional<AppUser> appUser = appUserRep.findById(userId);
+        if (appUser.isPresent()) {
+            ProfileImage userImage=appUser.get().getProfileImage();
+            cloudinaryService.deleteImage(userImage.getImageId());
             appUserRep.deleteById(userId);
         } else {
             throw new UsernameNotFoundException(String.format("user with %s ID is not exist", userId));

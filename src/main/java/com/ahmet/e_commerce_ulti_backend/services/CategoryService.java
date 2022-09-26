@@ -14,8 +14,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -23,6 +25,8 @@ public class CategoryService {
 
     private CategoryRep categoryRep;
     private CategoryImageRep categoryImageRep;
+
+    private CloudinaryService cloudinaryService;
 
     public Page<Category> getAllCategories(int pageSize, int pageNo, String sortDir,
                                            String sortField, String keyword) {
@@ -101,7 +105,7 @@ public class CategoryService {
                 images.add(image);
                 toUpdate.setImages(images);
             }
-            if (!request.getParentName().isEmpty()) {
+            if (request.getParentName()!=null) {
                 Category parentCategory = categoryRep.findByName(request.getParentName());
                 toUpdate.setParent(parentCategory);
             } else {
@@ -133,13 +137,24 @@ public class CategoryService {
             throw new UsernameNotFoundException(String.format("Category with %s Id is not exist", id));
         }
     }
+
+    public Category getCategory(Long id) {
+        return categoryRep.findById(id).get();
+    }
+
+    public void deleteCategory(Long id) throws IOException {
+
+        Optional<Category> category=categoryRep.findById(id);
+        if(category.isPresent()){
+            //First let's delete images from cloud
+            List<CategoryImage> categoryImages=category.get().getImages();
+            for(CategoryImage image:categoryImages){
+                cloudinaryService.deleteImage(image.getImageId());
+            }
+            categoryRep.deleteById(category.get().getId());
+        }else{
+            throw new UsernameNotFoundException(String.format("Category with %s ID is not exist",id));
+        }
+    }
 }
 
-/*
-
-    private String name;
-    private String alias;
-    private String parentName;
-    private boolean enabled;
-    private String imageId;
-* */
